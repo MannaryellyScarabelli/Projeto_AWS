@@ -4,8 +4,8 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 ## Etapas
 **1.Rodar Wordpress em ambiente local;** 
 
-**2.Criar uma RDS (Amazon Relational Database Service);** 
+**2.Cria uma EC2;** 
 
-**3.Cricar uma subnet pública;**
+**3.Criar uma RDS (Amazon Relational Database Service);**
 
-**4.Cria uma EC2;**
+
