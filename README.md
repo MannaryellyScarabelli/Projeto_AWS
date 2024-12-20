@@ -12,9 +12,11 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 
 **5.Conectar a EC2 com o banco de dados✅**
 
-**6.Criar um EFS(Elastic Fyle System)**
+**6.Subir Wordpress✅**
 
-**7.Criar um Load Balancer**
+**7.Criar um EFS(Elastic Fyle System)**
+
+**8.Criar um Load Balancer**
 
 
 
@@ -150,3 +152,5 @@ cd ~/wordpress-efs && docker-compose up -d
 ![image](https://github.com/user-attachments/assets/32abefc9-5c23-43fa-b98f-c604a2c7ca35)
 
 
+## Subir Wordpress
+Nessa etapa será necessário utilizsar o terminal do Ubuntu para para rodar o wordpress.
