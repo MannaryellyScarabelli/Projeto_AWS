@@ -66,6 +66,76 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 ## Script de automação
 
 
+```
+#!/bin/bash
+#user_data.sh - Script de automação para configurar Docker e implantar Wordpress no Ubuntu
+
+#Atualizar o sistema
+sudo apt update -y && sudo apt upgrade -y
+
+#Instalar dependências
+sudo apt install -y docker.io git curl
+
+#Iniciar e habilitar Docker
+sudo systemctl start docker
+sudo systemctl enable docker
+
+#Adicionar o usuário atual ao grupo docker (opcional, requer logout/login para aplicar)
+sudo usermod -aG docker $USER
+
+#Instalar Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+#Criar estrutura de pastas
+mkdir -p ~/wordpress-efs
+cd ~/wordpress-efs
+
+#Criar o arquivo docker-compose.yml
+cat > docker-compose.yml <<EOL
+version: '3.7'
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: colocar_endpoint
+      WORDPRESS_DB_USER: user_rds
+      WORDPRESS_DB_PASSWORD: password_rds
+      WORDPRESS_DB_NAME: nome_database
+    volumes:
+      - wp-data:/var/www/html
+
+volumes:
+  wp-data:
+EOL
+#Alterar a propriedade do arquivo docker-compose.yml (caso necessário)
+sudo chown $USER:$USER ~/wordpress-efs/docker-compose.yml
+
+#Subir os containers do Docker Compose
+cd ~/wordpress-efs && docker-compose up -d
+````
 
 
 ## Instância EC2
+
+1- Clicar em "executar instância"
+
+2- Colocar as tags necessárias, observe a seguir:
+
+![image](https://github.com/user-attachments/assets/11ea68e8-d364-4e83-9813-914a4f702e40)
+
+3- Selecione Ubuntu
+
+4- Crie um par de chave
+
+5- Selecione a VPC criada e a sub-rede
+
+6- Crie um grupo de segurança para a EC2
+
+7- Coloque as regras de entrada como mostra a imagem a seguir:
+
+![image](https://github.com/user-attachments/assets/f6ef1a00-f42f-4282-bed4-ae77e45e558f)
+
+8- Em detalhes avançados adicone o script e execute a instância
