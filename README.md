@@ -49,15 +49,23 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 
 5- Nomeie o nome do usuário principal
 
+6- Crie uma senha
+
+7- Selecione "db.t3.micro"
+
+8- Crie um grupo de segurança 
+
+9- Selecione a zona de disponibilidade "us-east-1a"
+
+10- Em configuração adicional dê o nome ao banco de dados
+
+![image](https://github.com/user-attachments/assets/3734e8d3-c3ae-4e9a-a2de-72385a295f82)
+
+
+
 ## Script de automação
 
-**Instalação de docker**
 
-**Instalar MySQL**
-
-**Configurar MySQL**
-
-**Criar um arquivo Docker-compose.yml que conha Wordpress e as configurações ideais**
 
 
 ## Instância EC2
