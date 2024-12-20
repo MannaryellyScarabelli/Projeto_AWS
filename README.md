@@ -139,3 +139,14 @@ cd ~/wordpress-efs && docker-compose up -d
 ![image](https://github.com/user-attachments/assets/f6ef1a00-f42f-4282-bed4-ae77e45e558f)
 
 8- Em detalhes avançados adicone o script e execute a instância
+
+
+## Conectar a instância com o banco de dados
+
+1- Selecione a instãncia criada 
+2- Vá em ações, redes e clique em "conectar banco de dados do RDS"
+3- Selecione o que mostra na imagem a seguir:
+
+![image](https://github.com/user-attachments/assets/32abefc9-5c23-43fa-b98f-c604a2c7ca35)
+
+
