@@ -4,20 +4,19 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 ## Etapas
 **1.Criar uma VPC✅**
 
-**2.Criar um banco de dados RDS✅**
+**2.Grupos de segurança✅**
 
-**3.Criar um script user_data.sh✅** 
+**3.Criar um banco de dados RDS✅**
 
-**4.Cria uma EC2✅** 
+**4.Criar um EFS(Elastic Fyle System)✅**
 
-**5.Conectar a EC2 com o banco de dados✅**
+**5.Criar um script user_data.sh✅** 
 
-**6.Subir Wordpress✅**
+**6.Cria uma EC2✅** 
 
-**7.Criar um EFS(Elastic Fyle System)**
+**7.Criar um Load Balancer✅**
 
-**8.Criar um Load Balancer**
-
+**8.Criar grupo de Auto Scaling✅**
 
 
 ## Pré-requisitos
@@ -37,6 +36,35 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 4- Selecione "em 1 AZ" em Gateways NAT (USD)
 
 ![image](https://github.com/user-attachments/assets/a240f985-ddfd-4425-89f7-70113c9c79ae)
+
+### Grupos de segurança (Regras de acesso)
+Para configurar as regras de acesso é necessário:
+
+### Para grupo público, as entradas permitidas são:
+
+HTTP: (porta 80) de qualquer origem (0.0.0.0/0)
+
+HTTPS: (porta 443) de qualquer origem (0.0.0.0/0)
+
+SSH: (porta 22) de qualquer origem (0.0.0.0/0)
+
+### Saídas permitidas, são:
+
+Todo o tráfego, sem restrição de portas ou protocolos
+
+### Para grupo privado, as entradas permitidas são:
+
+MySQL: (porta 3306) de qualquer origem.
+
+HTTP: (porta 80) e HTTPS (porta 443) apenas do grupo público.
+
+SSH: (porta 22) de qualquer origem.
+
+NFS: (porta 2049) de qualquer origem
+
+### Saídas permitidas, são:
+
+Todo o tráfego liberado.
 
 
 ## Criação da RDS
@@ -69,54 +97,35 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 
 
 ```
-#!/bin/bash
-#user_data.sh - Script de automação para configurar Docker e implantar Wordpress no Ubuntu
-
-#Atualizar o sistema
-sudo apt update -y && sudo apt upgrade -y
-
-#Instalar dependências
-sudo apt install -y docker.io git curl
-
-#Iniciar e habilitar Docker
+!/bin/bash 
+ 
+sudo yum update -y 
+sudo yum install docker -y
 sudo systemctl start docker
 sudo systemctl enable docker
-
-#Adicionar o usuário atual ao grupo docker (opcional, requer logout/login para aplicar)
-sudo usermod -aG docker $USER
-
-#Instalar Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo usermod -aG docker ec2-user
+newgrp docker
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-
-#Criar estrutura de pastas
-mkdir -p ~/wordpress-efs
-cd ~/wordpress-efs
-
-#Criar o arquivo docker-compose.yml
-cat > docker-compose.yml <<EOL
-version: '3.7'
+sudo mkdir /home/ec2-user/wordpress
+cat <<EOF > /home/ec2-user/wordpress/docker-compose.yml
 services:
+ 
   wordpress:
-    image: wordpress:latest
+    image: wordpress
+    restart: always
     ports:
-      - "80:80"
+      - 80:80
     environment:
-      WORDPRESS_DB_HOST: colocar_endpoint
-      WORDPRESS_DB_USER: user_rds
-      WORDPRESS_DB_PASSWORD: password_rds
-      WORDPRESS_DB_NAME: nome_database
+      WORDPRESS_DB_HOST: endpoint
+      WORDPRESS_DB_USER: user_nome
+      WORDPRESS_DB_PASSWORD: senha
+      WORDPRESS_DB_NAME: database_nome
     volumes:
-      - wp-data:/var/www/html
-
-volumes:
-  wp-data:
-EOL
-#Alterar a propriedade do arquivo docker-compose.yml (caso necessário)
-sudo chown $USER:$USER ~/wordpress-efs/docker-compose.yml
-
-#Subir os containers do Docker Compose
-cd ~/wordpress-efs && docker-compose up -d
+      - /mnt/efs:/var/www/html
+EOF
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-075721db6bcd55dce.efs.us-east-1.amazonaws.com:/ /mnt/efs
+docker-compose -f /home/ec2-user/wordpress/docker-compose.yml up -d
 ````
 
 
@@ -143,14 +152,6 @@ cd ~/wordpress-efs && docker-compose up -d
 8- Em detalhes avançados adicone o script e execute a instância
 
 
-## Conectar a instância com o banco de dados
+## Criação Load Balancer
 
-1- Selecione a instãncia criada 
-2- Vá em ações, redes e clique em "conectar banco de dados do RDS"
-3- Selecione o que mostra na imagem a seguir:
-
-![image](https://github.com/user-attachments/assets/32abefc9-5c23-43fa-b98f-c604a2c7ca35)
-
-
-## Subir Wordpress
-Nessa etapa será necessário utilizsar o terminal do Ubuntu para para rodar o wordpress.
+Nesta etapa será onde 
