@@ -151,7 +151,12 @@ docker-compose -f /home/ec2-user/wordpress/docker-compose.yml up -d
 
 8- Em detalhes avançados adicone o script e execute a instância
 
+## Criação do Load Balancer
 
-## Criação Load Balancer
 
-Nesta etapa será onde 
+
+
+## Grupo Auto Scaling
+
+Nesta etapa será onde realiza as configurações para replicar as instâncias EC2.
+
