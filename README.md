@@ -18,6 +18,8 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 
 **8.Criar grupo de Auto Scaling✅**
 
+**9.Verificação✅**
+
 
 ## Pré-requisitos
 **Ter uma conta AWS com as permissês necessárias**
@@ -153,10 +155,30 @@ docker-compose -f /home/ec2-user/wordpress/docker-compose.yml up -d
 
 ## Criação do Load Balancer
 
+1- Para iniciar escolha a opção "Classic Load Balancer"
 
+2- Adicione a VPC e as sub-redes públicas
+
+3- Adicione o grupo de segurança público
+
+4- Adicione a instância EC2
+
+5- Para o monitoramento de saúde coloque o protocolo HTTP
+
+6- Porta: 80
+
+7- Caminho: /wp-admin/install.php
 
 
 ## Grupo Auto Scaling
 
 Nesta etapa será onde realiza as configurações para replicar as instâncias EC2.
 
+1- Selecione as mesmas configurações da EC2 (menos as sub-redes públicas, selecione as privadas)
+
+3- Conecte ao Load Balancer
+
+
+## Verificação
+
+Para verificar o funcionamento, copie o DNS do Load Balancer e coloque no navegador para acessar o Wordpress.
