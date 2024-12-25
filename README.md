@@ -37,7 +37,8 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 
 4- Selecione "em 1 AZ" em Gateways NAT (USD)
 
-![image](https://github.com/user-attachments/assets/a240f985-ddfd-4425-89f7-70113c9c79ae)
+![image](https://github.com/user-attachments/assets/74c016aa-22fc-4f84-97bb-1ec4c1512cda)
+
 
 ### Grupos de segurança (Regras de acesso)
 Para configurar as regras de acesso é necessário:
@@ -93,7 +94,12 @@ Todo o tráfego liberado.
 
 ![image](https://github.com/user-attachments/assets/3734e8d3-c3ae-4e9a-a2de-72385a295f82)
 
+# Criação do Elastic File System (EFS)
+- Vá em EFS
+- Nomeie seu EFS e crie-o
 
+  ![image](https://github.com/user-attachments/assets/0e826417-c876-4ca9-be90-c8ad063f0f08)
+- Vá em anexar e atualize seu script usando a motagem via cliente DNS
 
 ## Script de automação
 
@@ -119,14 +125,14 @@ services:
     ports:
       - 80:80
     environment:
-      WORDPRESS_DB_HOST: endpoint
+      WORDPRESS_DB_HOST: endpoint:porta do bd
       WORDPRESS_DB_USER: user_nome
       WORDPRESS_DB_PASSWORD: senha
       WORDPRESS_DB_NAME: database_nome
     volumes:
       - /mnt/efs:/var/www/html
 EOF
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-075721db6bcd55dce.efs.us-east-1.amazonaws.com:/ /mnt/efs
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-00b28bccaed41500a.efs.us-east-1.amazonaws.com:/ /mnt/efs
 docker-compose -f /home/ec2-user/wordpress/docker-compose.yml up -d
 ````
 
