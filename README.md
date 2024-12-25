@@ -23,14 +23,11 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 ## Pré-requisitos
 **Ter uma conta AWS com as permissês necessárias**
 
-**Ter acesso a um terminal SSH**
-
-
 ## Criação da VPC
 
 1- Clicar em "criar VPC"
 
-2- Selecionar "criar VPC Ee muito mais", isso permite criar e vizualuizar a tabela de rotas de sub-redes
+2- Selecionar "criar VPC e muito mais", isso permite criar e vizualuizar a tabela de rotas de sub-redes
 
 3- Dê um nome a sua VPC
 
@@ -41,7 +38,7 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 
 ## Grupos de segurança (Regras de acesso)
 
-Nesta etapa é onde ocorre a criação dos grupos de segurança. No canto esquerdo na AWS sselecione "grupo de segurança" e crie um com as seguintes especificações: 
+Nesta etapa é onde ocorre a criação dos grupos de segurança. No canto esquerdo na AWS selecione "grupo de segurança" e crie um com as seguintes especificações: 
 
 >Para grupo público, as entradas permitidas são:
 
@@ -92,7 +89,8 @@ Todo o tráfego liberado.
 
 10- Em configuração adicional dê o nome ao banco de dados
 
-![image](https://github.com/user-attachments/assets/3734e8d3-c3ae-4e9a-a2de-72385a295f82)
+![image](https://github.com/user-attachments/assets/6b3fc1b6-9843-4b8c-9bdb-f4534d2efdc3)
+
 
 ## Criação do Elastic File System (EFS)
 
@@ -105,11 +103,11 @@ Todo o tráfego liberado.
 4- Finalize as configurações e verifique que está em um grupo de segurança privado
 
   ![image](https://github.com/user-attachments/assets/0e826417-c876-4ca9-be90-c8ad063f0f08)
-- Vá em anexar e atualize seu script usando a motagem via cliente DNS
+- Vá em anexar e atualize seu script usando a motagem via cliente DNS, subtituindo o "efs" pelo caminho do diretório de montagem
 
 
 
-## Instância EC2
+## Instâncias EC2
 
 1- Clicar em "executar instância"
 
@@ -117,11 +115,11 @@ Todo o tráfego liberado.
 
 ![image](https://github.com/user-attachments/assets/11ea68e8-d364-4e83-9813-914a4f702e40)
 
-3- Selecione Ubuntu
+3- Selecione Amazon Linux 2023
 
 4- Crie um par de chave
 
-5- Selecione a VPC criada e a sub-rede
+5- Selecione a VPC criada e a sub-rede privada
 
 6- Crie um grupo de segurança para a EC2
 
@@ -130,6 +128,7 @@ Todo o tráfego liberado.
 ![image](https://github.com/user-attachments/assets/f6ef1a00-f42f-4282-bed4-ae77e45e558f)
 
 8- Em detalhes avançados adicone o script e execute a instância
+9- Repita os passos criando outra instância quase idêntica, alterando apenas a zona de disponibilidade da sub-rede privada (se criou na A, agora crie na B e vice-versa) 
 
 
 ````
@@ -179,14 +178,14 @@ docker-compose -f /home/ec2-user/wordpress/docker-compose.yml up -d
 
 6- Porta: 80
 
-7- Caminho: /wp-admin/install.php
+7- Caminho de ping: /wp-admin/install.php
 
 
 ## Grupo Auto Scaling
 
 Nesta etapa será onde realiza as configurações para replicar as instâncias EC2.
 
-1- Selecione as mesmas configurações da EC2 (menos as sub-redes públicas, selecione as privadas)
+1- Selecione as mesmas configurações da EC2 no seu grupo de autoscaling (menos as sub-redes públicas, selecione as privadas)
 
 3- Conecte ao Load Balancer
 
