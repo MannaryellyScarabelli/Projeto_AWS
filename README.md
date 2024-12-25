@@ -2,6 +2,7 @@
 Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estágio da Compass.UOL. Seu objetivo é rodar Wordpress em nuvem em uma instância EC2 utilizando Docker e o banco de dados MySQL.
 
 ## Etapas
+
 **1.Criar uma VPC✅**
 
 **2.Grupos de segurança✅**
@@ -10,15 +11,13 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 
 **4.Criar um EFS(Elastic Fyle System)✅**
 
-**5.Criar um script user_data.sh✅** 
+**5.Cria uma EC2✅** 
 
-**6.Cria uma EC2✅** 
+**6.Criar um Load Balancer✅**
 
-**7.Criar um Load Balancer✅**
+**7.Criar grupo de Auto Scaling✅**
 
-**8.Criar grupo de Auto Scaling✅**
-
-**9.Verificação✅**
+**8.Verificação✅**
 
 
 ## Pré-requisitos
@@ -40,10 +39,11 @@ Este projeto se desenvolve em um ambiente AWS oferecido pelo programa de estági
 ![image](https://github.com/user-attachments/assets/74c016aa-22fc-4f84-97bb-1ec4c1512cda)
 
 
-### Grupos de segurança (Regras de acesso)
-Para configurar as regras de acesso é necessário:
+## Grupos de segurança (Regras de acesso)
 
-### Para grupo público, as entradas permitidas são:
+Nesta etapa é onde ocorre a criação dos grupos de segurança. No canto esquerdo na AWS sselecione "grupo de segurança" e crie um com as seguintes especificações: 
+
+>Para grupo público, as entradas permitidas são:
 
 HTTP: (porta 80) de qualquer origem (0.0.0.0/0)
 
@@ -51,11 +51,11 @@ HTTPS: (porta 443) de qualquer origem (0.0.0.0/0)
 
 SSH: (porta 22) de qualquer origem (0.0.0.0/0)
 
-### Saídas permitidas, são:
+>Saídas permitidas, são:
 
 Todo o tráfego, sem restrição de portas ou protocolos
 
-### Para grupo privado, as entradas permitidas são:
+>Para grupo privado, as entradas permitidas são:
 
 MySQL: (porta 3306) de qualquer origem.
 
@@ -65,7 +65,7 @@ SSH: (porta 22) de qualquer origem.
 
 NFS: (porta 2049) de qualquer origem
 
-### Saídas permitidas, são:
+>Saídas permitidas, são:
 
 Todo o tráfego liberado.
 
@@ -94,17 +94,45 @@ Todo o tráfego liberado.
 
 ![image](https://github.com/user-attachments/assets/3734e8d3-c3ae-4e9a-a2de-72385a295f82)
 
-# Criação do Elastic File System (EFS)
-- Vá em EFS
-- Nomeie seu EFS e crie-o
+## Criação do Elastic File System (EFS)
+
+1- Vá em EFS
+
+2- Nomeie seu EFS
+
+3- Selecione as sub-redes privadas criadas na VPC
+
+4- Finalize as configurações e verifique que está em um grupo de segurança privado
 
   ![image](https://github.com/user-attachments/assets/0e826417-c876-4ca9-be90-c8ad063f0f08)
 - Vá em anexar e atualize seu script usando a motagem via cliente DNS
 
-## Script de automação
 
 
-```
+## Instância EC2
+
+1- Clicar em "executar instância"
+
+2- Colocar as tags necessárias, observe a seguir:
+
+![image](https://github.com/user-attachments/assets/11ea68e8-d364-4e83-9813-914a4f702e40)
+
+3- Selecione Ubuntu
+
+4- Crie um par de chave
+
+5- Selecione a VPC criada e a sub-rede
+
+6- Crie um grupo de segurança para a EC2
+
+7- Coloque as regras de entrada como mostra a imagem a seguir:
+
+![image](https://github.com/user-attachments/assets/f6ef1a00-f42f-4282-bed4-ae77e45e558f)
+
+8- Em detalhes avançados adicone o script e execute a instância
+
+
+````
 !/bin/bash 
  
 sudo yum update -y 
@@ -134,30 +162,8 @@ services:
 EOF
 sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-00b28bccaed41500a.efs.us-east-1.amazonaws.com:/ /mnt/efs
 docker-compose -f /home/ec2-user/wordpress/docker-compose.yml up -d
+
 ````
-
-
-## Instância EC2
-
-1- Clicar em "executar instância"
-
-2- Colocar as tags necessárias, observe a seguir:
-
-![image](https://github.com/user-attachments/assets/11ea68e8-d364-4e83-9813-914a4f702e40)
-
-3- Selecione Ubuntu
-
-4- Crie um par de chave
-
-5- Selecione a VPC criada e a sub-rede
-
-6- Crie um grupo de segurança para a EC2
-
-7- Coloque as regras de entrada como mostra a imagem a seguir:
-
-![image](https://github.com/user-attachments/assets/f6ef1a00-f42f-4282-bed4-ae77e45e558f)
-
-8- Em detalhes avançados adicone o script e execute a instância
 
 ## Criação do Load Balancer
 
@@ -184,6 +190,7 @@ Nesta etapa será onde realiza as configurações para replicar as instâncias E
 
 3- Conecte ao Load Balancer
 
+4- Realize a finalização 
 
 ## Verificação
 
