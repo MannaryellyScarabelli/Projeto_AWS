@@ -113,7 +113,8 @@ Todo o tráfego liberado.
 
 2- Colocar as tags necessárias, observe a seguir:
 
-![image](https://github.com/user-attachments/assets/11ea68e8-d364-4e83-9813-914a4f702e40)
+![image](https://github.com/user-attachments/assets/8cc3c0f3-cacd-4ac9-9184-2ff54c9bfb53)
+
 
 3- Selecione Amazon Linux 2023
 
