@@ -195,3 +195,6 @@ Nesta etapa será onde realiza as configurações para replicar as instâncias E
 ## Verificação
 
 Para verificar o funcionamento, copie o DNS do Load Balancer e coloque no navegador para acessar o Wordpress.
+
+![image](https://github.com/user-attachments/assets/428940b6-5237-4972-97ba-92a5832f630d)
+
